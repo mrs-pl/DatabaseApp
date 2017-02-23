@@ -1,7 +1,7 @@
 <?php
 //include db file, start session, initiate connection, find username
 require_once 'dbInfo.php';
-session_start();
+require_once 'checkSession.php';
 $conn = new mysqli($hn, $un, $pw, $db);
 if(isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
@@ -12,7 +12,7 @@ if(isset($_SESSION['username'])) {
 //create and execute query for selecting all patients
 $query = "SELECT * from Patient ORDER BY Patient.EnrollmentOrder ASC";
 $result = $conn->query($query);
-if(!result) die ($conn->error);
+if(!$result) die ($conn->error);
 $rows = $result->num_rows;
 
 

@@ -1,5 +1,6 @@
 <?php
 require_once 'dbInfo.php';
+require_once 'checkSession.php';
 session_start();
 $conn = new mysqli($hn, $un, $pw, $db);
 if(isset($_SESSION['username'])) {
@@ -13,7 +14,7 @@ if (isset($_POST['AlgorithmId'])) {
     $algorithmId = '';
 }
 
-$algDetailsQuery = "SELECT * From AlgorithmList where AlgorithmList.AlgorithmID = '$algorithmID'";
+$algDetailsQuery = "SELECT * From AlgorithmList where AlgorithmList.AlgorithmID = '$algorithmId'";
 $algDetailsResult = $conn->query($algDetailsQuery);
 if(!$algDetailsResult) die ($conn->error);
 
@@ -66,7 +67,7 @@ _END;
 
 $query = "SELECT * from AlgorithmValues where AlgorithmValues.AlgorithmId = '$algorithmId'";
 $result = $conn->query($query);
-if(!result) die ($conn->error);
+if(!$result) die ($conn->error);
 $rows = $result->num_rows;
 $row = $result->fetch_array(MYSQLI_NUM);
 for ($j=0; $j<$rows; $j++) {
@@ -75,7 +76,7 @@ for ($j=0; $j<$rows; $j++) {
     echo <<<_END
         
         <tr align="center">
-            <td>$row[2]<input type="hidden" value="$row2[1]" name="$row2[2]"></td>
+            <td>$row[2]<input type="hidden" value="$row[1]" name="$row[2]"></td>
             <td>$row[3]</td>
             <td>$row[4]</td>
             <td><input type="text" value="$row[5]" name="$row[5]"</td>

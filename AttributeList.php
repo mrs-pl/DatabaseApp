@@ -2,7 +2,7 @@
 
 //include db file, start session, initiate connection, find username
 require_once 'dbInfo.php';
-session_start();
+require_once 'checkSession.php';
 $conn = new mysqli($hn, $un, $pw, $db);
 if(isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
@@ -13,7 +13,7 @@ if(isset($_SESSION['username'])) {
 //create and execute query to select all patient attribute names
 $query = "SELECT * from PatientAttributeNames";
 $result = $conn->query($query);
-if(!result) die ($conn->error);
+if(!$result) die ($conn->error);
 $rows = $result->num_rows;
 
 

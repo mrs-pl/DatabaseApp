@@ -53,7 +53,7 @@ echo <<<_END
             </div>
             
             <div id="column3" style="float:left; width:42%">
-                <a href="Results.php"><h2 align="center">Results</h2>
+                <a href="ResultsSearch.php"><h2 align="center">Results</h2>
                 <img src="Images/performance.jpg" width="100%"></a>
             </div>
             
