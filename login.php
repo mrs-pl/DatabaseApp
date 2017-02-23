@@ -64,6 +64,9 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
         $correct_pw = $row[2];
         $userId = $row[0];
         $userName = $row[1];
+		$isAdmin = $row[3];
+		$canEdit = $row[4];
+		$canAddAttribute = $row[5];
         
         if($pw_temp == $correct_pw){
             //session_start();
@@ -71,6 +74,9 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
             $_SESSION["username"]=$userName;
             $_SESSION["password"]=$pw_temp;
             $_SESSION['userId']=$userId;
+			$_SESSION['isAdmin'] = $isAdmin;
+			$_SESSION['canEdit'] = $canEdit;
+			$_SESSION['canAddAttribute'] = $canAddAttribute;
             
             
             
@@ -113,5 +119,5 @@ function mysql_fix_string($conn, $string){
 	return $conn->real_escape_string($string);
 }
 
-
+?>
     

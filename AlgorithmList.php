@@ -1,6 +1,6 @@
 <?php
 require_once 'dbInfo.php';
-session_start();
+require_once 'checkSession.php';
 $conn = new mysqli($hn, $un, $pw, $db);
 if(isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
@@ -63,7 +63,7 @@ _END;
 
 $query = "SELECT * from AlgorithmList ORDER BY AlgorithmList.AlgorithmID ASC";
 $result = $conn->query($query);
-if(!result) die ($conn->error);
+if(!$result) die ($conn->error);
 $rows = $result->num_rows;
 for ($j=0; $j<$rows; $j++) {
     $result->data_seek($j);

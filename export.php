@@ -13,7 +13,6 @@ if (isset($_SESSION['username'])) {
 //check which type of query is being passed in, only patients or patients and scan data
 if (isset($_POST['query'])) {
     //only patient data should be exported
-    echo $_POST['query'];
     $query = $_POST['query'];
     $url = $_POST['url'];
 
@@ -50,7 +49,6 @@ if (isset($_POST['query'])) {
 } elseif (isset($_POST['resultsQuery'])){
     $finalQuery = $_POST['resultsQuery'];
     $url = $_POST['url'];
-    echo "TEST";
     
 } elseif (isset($_POST['query2'])){
     //patient and scan data should be exported
@@ -99,7 +97,7 @@ if (isset($_POST['query'])) {
 
 //execute final query and export results to export.csv
 $result = $conn->query($finalQuery);
-if(!result) die ($conn->error);
+if(!$result) die ($conn->error);
 $rows = $result->num_rows;
 $headers = $result->fetch_fields();
 foreach($headers as $header) {
@@ -109,10 +107,10 @@ $fp = fopen('export.csv', 'w');
 
 if ($fp && $result) {
     
-    header('Content-Type: application/octet-stream');
+    /*header('Content-Type: application/csv');
     header('Content-Disposition: attachment; filename="export.csv"');
     header('Pragma: no-cache');
-    header('Expires: 0');
+    header('Expires: 0');*/
     fputcsv($fp, array_values($head)); 
     while ($row = $result->fetch_array(MYSQLI_NUM)) {
         fputcsv($fp, array_values($row));
@@ -120,9 +118,10 @@ if ($fp && $result) {
     
 }
 
+fclose($fp);
 //open exported file in a new tab, causing it to be downloaded to computer
-echo "<script> window.open('export.csv', '_blank'); win.focus();</script>";
+echo "<script> window.open('export.csv', '_blank');</script>";
 //redirect after completing
-echo "<script> window.location.assign('$url'); </script>";
+ echo "<script> window.location.assign('$url'); </script>";
 
 ?>

@@ -13,7 +13,7 @@ if(isset($_SESSION['username'])) {
 
 $query = "SELECT * from PatientAttributeNames";
 $result = $conn->query($query);
-if(!result) die ($conn->error);
+if(!$result) die ($conn->error);
 $rows = $result->num_rows;
 
 echo <<<_END

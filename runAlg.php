@@ -38,7 +38,6 @@ function runAlgorithm($algId, $subjectID) {
     
     //echo "$subjectID <br>";
     require 'dbInfo.php';
-    session_start();
     $conn= new mysqli($hn, $un, $pw, $db);
     if(isset($_SESSION['username'])) {
         $username = $_SESSION['username'];

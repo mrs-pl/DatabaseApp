@@ -2,14 +2,18 @@
 
 //include db file, start session, initiate connection, find username
 require_once 'dbInfo.php';
-session_start();
+require_once 'checkSession.php';
 $conn = new mysqli($hn, $un, $pw, $db);
 if(isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
+	$isAdmin = $_SESSION['isAdmin'];
 } else {
     $username = '';
 }
 
+if($isAdmin == "No") {
+	header("Location: home.php");
+}
 //create basic html page structure, header, etc.
 echo <<<_END
     <html>
@@ -137,6 +141,19 @@ echo<<<_END
     </html>
 _END;
 
+//jquery script to change the header depending on whether or not a user is logged in
+if(isset($_SESSION['username'])){
+    echo "<script>
+            $('#loginNeeded').hide()
+            $('#loggedIn').show()
+        </script>";
+} else {
+    echo "<script>
+            $('#loggedIn').hide()
+            $('#loginNeeded').show()
+        </script>";
+    
+}
 
 
 ?>

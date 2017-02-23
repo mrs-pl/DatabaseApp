@@ -1,6 +1,6 @@
 <?php
 require_once 'dbInfo.php';
-session_start();
+require_once 'checkSession.php';
 $conn = new mysqli($hn, $un, $pw, $db);
 if(isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
@@ -10,8 +10,8 @@ if(isset($_SESSION['username'])) {
 
 if(isset($_POST['algName'])){
     $algName = $_POST['algName'];
-    $allQuery = $_POST['allQuery'];
-    $numAttributes = $_POST['numAttributes'];
+    //$allQuery = $_POST['allQuery'];
+    //$numAttributes = $_POST['numAttributes'];
     
     if($algName == 'All Algorithms'){
         //User has indicated that they want to view all of the Algorithm Results
@@ -51,7 +51,7 @@ if(isset($_POST['algName'])){
         
         $resultsQuery = "SELECT Patient.SubjectID, Patient.Sex, Patient.MalignantBenign, Calculations.AlgScore, Calculations.Prediction, Calculations.Performance from ProLungdx.Patient Join ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID WHERE Calculations.AlgID = '$algID'";
         $resultsResult = $conn->query($resultsQuery);
-        if(!resultsResult) die ($conn->error);
+        if(!$resultsResult) die ($conn->error);
         $resultsRows = $resultsResult->num_rows;
 
 
@@ -124,6 +124,7 @@ for($x=0;$x<$queryRows;$x++){
     $id = $algs[0][$x][0];
     $sex = $algs[0][$x][1];
     $maligBenign = $algs[0][$x][2];
+    
     echo<<<_END
                 <tr>
                     <td>$id</td>
