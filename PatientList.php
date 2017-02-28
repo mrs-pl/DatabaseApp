@@ -11,6 +11,7 @@ if(isset($_SESSION['username'])) {
 
 //create and execute query for selecting all patients
 $query = "SELECT * from Patient ORDER BY Patient.EnrollmentOrder ASC";
+$exportQuery = "SELECT * from Patient WHERE Patient.SubmittedToAnalysis = '1'";
 $result = $conn->query($query);
 if(!$result) die ($conn->error);
 $rows = $result->num_rows;
@@ -53,7 +54,7 @@ echo <<<_END
             <h1 align="center">Patients</h1>
             <a href="PatientQuery.php"><h3 align="center">Query Patients</h3></a>
             <form align="center" action="export.php" method = "post">
-                <input type="hidden" value="$query" name="query">
+                <input type="hidden" value="$exportQuery" name="query">
                 <input type="hidden" value="PatientList.php" name="url">
                 <input type="submit" value="Export Patient List">
             </form>

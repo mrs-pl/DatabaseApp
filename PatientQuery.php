@@ -44,7 +44,8 @@ echo <<<_END
         <div id="contentBox" style="margin:0px auto; width:100%">
             <div id="column1" style="float:left; margin:0; width:100%;">
                 <form action="PatientQuery.php" method="post">
-                    Query patients with: <br> 
+                    Query patients with: <br>
+					
 _END;
 
 //create the attribute form 10 times
@@ -53,6 +54,7 @@ for($x=1; $x<11; $x++){
                     <select name="attribute$x">
                         <option selected disabled>Choose Attribute</option>
 _END;
+
 
     //create and execute sql query to return all attribute names
     $query = "SELECT * from PatientAttributeNames order by AttributeName ASC";
@@ -124,41 +126,101 @@ if(isset($_SESSION['username'])){
 
 //check if submit query has been clicked then build sql query using the form input
 if(isset($_POST['querySubmit'])){
-    $attribute1 = $_POST['attribute1'];
-    $operator1 = $_POST['operator1'];
-    $input1 = $_POST['input1']; 
-    if($operator1 == 'like') {
-        $query1 = "Select * from Patient where Patient.$attribute1 $operator1 '%$input1%'";
-    } else{
-        $query1 = "Select * from Patient where Patient.$attribute1 $operator1'$input1'";
-    }
-    $attribute2 = $_POST['attribute2'];
-    $operator2 = $_POST['operator2'];
-    $input2 = $_POST['input2'];
-    $attribute3 = $_POST['attribute3'];
-    $operator3 = $_POST['operator3'];
-    $input3 = $_POST['input3'];
-    $attribute4 = $_POST['attribute4'];
-    $operator4 = $_POST['operator4'];
-    $input4 = $_POST['input4'];
-    $attribute5 = $_POST['attribute5'];
-    $operator5 = $_POST['operator5'];
-    $input5 = $_POST['input5'];
-    $attribute6 = $_POST['attribute6'];
-    $operator6 = $_POST['operator6'];
-    $input6 = $_POST['input6'];
-    $attribute7 = $_POST['attribute7'];
-    $operator7 = $_POST['operator7'];
-    $input7 = $_POST['input7'];
-    $attribute8 = $_POST['attribute8'];
-    $operator8 = $_POST['operator8'];
-    $input8 = $_POST['input8'];
-    $attribute9 = $_POST['attribute9'];
-    $operator9 = $_POST['operator9'];
-    $input9 = $_POST['input9'];
-    $attribute10 = $_POST['attribute10'];
-    $operator10 = $_POST['operator10'];
-    $input10 = $_POST['input10'];
+    if(isset($_POST['attribute1'])){
+		$attribute1 = $_POST['attribute1'];
+		$operator1 = $_POST['operator1'];
+		$input1 = $_POST['input1']; 
+		if($operator1 == 'like') {
+			$query1 = "Select * from Patient where Patient.$attribute1 $operator1 '%$input1%'";
+		} else{
+			$query1 = "Select * from Patient where Patient.$attribute1 $operator1'$input1'";
+		}
+	} else {
+		$attribute1 = '';
+		$operator1 = '';
+		$input1 = '';
+	}
+	if(isset($_POST['attribute2'])){
+		$attribute2 = $_POST['attribute2'];
+		$operator2 = $_POST['operator2'];
+		$input2 = $_POST['input2'];
+	} else {
+		$attribute2 = '';
+		$operator2 = '';
+		$input2 = '';
+	}
+	if(isset($_POST['attribute3'])) {
+		$attribute3 = $_POST['attribute3'];
+		$operator3 = $_POST['operator3'];
+		$input3 = $_POST['input3'];
+	} else {
+		$attribute3 = '';
+		$operator3 = '';
+		$input3 = '';
+	}
+	if(isset($_POST['attribute4'])) {
+		$attribute4 = $_POST['attribute4'];
+		$operator4 = $_POST['operator4'];
+		$input4 = $_POST['input4'];
+	} else {
+		$attribute4 = '';
+		$operator4 = '';
+		$input4 = '';
+	}
+	if(isset($_POST['attribute5'])) {
+		$attribute5 = $_POST['attribute5'];
+		$operator5 = $_POST['operator5'];
+		$input5 = $_POST['input5'];
+	} else {
+		$attribute5 = '';
+		$operator5 = '';
+		$input5 = '';
+	}
+	if(isset($_POST['attribute6'])) {
+		$attribute6 = $_POST['attribute6'];
+		$operator6 = $_POST['operator6'];
+		$input6 = $_POST['input6'];
+	} else {
+		$attribute6 = '';
+		$operator6 = '';
+		$input6 = '';
+	}
+	if(isset($_POST['attribute7'])) {
+		$attribute7 = $_POST['attribute7'];
+		$operator7 = $_POST['operator7'];
+		$input7 = $_POST['input7'];
+	} else {
+		$attribute7 = '';
+		$operator7 = '';
+		$input7 = '';
+	}
+	if(isset($_POST['attribute8'])) {
+		$attribute8 = $_POST['attribute8'];
+		$operator8 = $_POST['operator8'];
+		$input8 = $_POST['input8'];
+	} else {
+		$attribute8 = '';
+		$operator8 = '';
+		$input8 = '';
+	}
+	if(isset($_POST['attribute9'])) {
+		$attribute9 = $_POST['attribute9'];
+		$operator9 = $_POST['operator9'];
+		$input9 = $_POST['input9'];
+	} else {
+		$attribute9 = '';
+		$operator9 = '';
+		$input9 = '';
+	}
+	if(isset($_POST['attribute10'])) {
+		$attribute10 = $_POST['attribute10'];
+		$operator10 = $_POST['operator10'];
+		$input10 = $_POST['input10'];
+	} else {
+		$attribute10 = '';
+		$operator10 = '';
+		$input10 = '';
+	}
     $queryCriteria = $attribute1.$operator1.$input1;
     if($attribute2 == "") {
         
@@ -250,6 +312,7 @@ if(isset($_POST['querySubmit'])){
             $query1 =$query1." and Patient.$attribute10 $operator10'$input10'";
         }
     }
+	$query1 = $query1." AND Patient.SubmittedToAnalysis = '1'";
     $result1 = $conn->query($query1);
     if(!$result) die ($conn->error);
     $rows1 = $result1->num_rows;

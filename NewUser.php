@@ -40,10 +40,24 @@ echo <<<_END
             
         </head>
 		<body>
+			<h2 align="center">Create New User</h2>
             <div align="center">
-			<form method='post' action="login.php">
-				Username <input type='text' name='username'><br><br>
-				Password <input type='password' name='password'><br><br>
+			<form method='post' action="NewUser.php">
+				Username <input type='text' name='newUsername'><br><br>
+				Password <input type='password' name='newPassword'><br><br>
+				Confirm Password <input type='password' name='confirmPassword'><br><br>
+				Is Admin <select name='isAdmin'>
+							<option>No</option>
+							<option>Yes</option>
+						</select><br><br>
+				Can Edit <select name='canEdit'>
+							<option>No</option>
+							<option>Yes</option>
+						</select><br><br>
+				Can Add Attribute <select name='canAddAttribute'>
+							<option>No</option>
+							<option>Yes</option>
+						</select><br><br>
 				<input type="submit">
 			</form>
             </div>
@@ -52,6 +66,59 @@ echo <<<_END
 
 _END;
 
+if(isset($_POST['newUsername'])){
+	//set variable values to the passed in values
+	$newUsername = $_POST['newUsername'];
+	$newPassword = $_POST['newPassword'];
+	$confirmPassword = $_POST['confirmPassword'];
+	$isAdmin = $_POST['isAdmin'];
+	$canEdit = $_POST['canEdit'];
+	$canAddAttribute = $_POST['canAddAttribute'];
+	$checkUsernameQuery = "SELECT * FROM ProLungdx.Users where Users.UserName = '$newUsername'";
+	$checkUsernameResults = $conn->query($checkUsernameQuery);
+	if(!$checkUsernameResults) die ($conn->error);
+	$checkUserRows = $checkUsernameResults->num_rows;
+	
+	//check the database for the requested username
+	if($checkUserRows != 0) {
+		echo "This Username has already been taken";
+		
+	} else{
+		//check that the password and the password confirmation match
+		if ($newPassword == $confirmPassword) {
+			//sql query to insert user into the database table users
+			$newUserQuery = "INSERT INTO ProLungdx.Users (UserName, Password, IsAdmin, CanEdit, CanAddAttribute) Values ('$newUsername', '$newPassword', '$isAdmin', '$canEdit', '$canAddAttribute')";
+			$newUserResults = $conn->query($newUserQuery);
+			if(!$newUserResults) die ($conn->error);
+			
+			//create loop to set user preferences for all attributes
+			$numAttributeQuery = "SELECT * from prolungdx.patientattributenames";
+			$numAttributeResult = $conn->query($numAttributeQuery);
+			if(!$numAttributeResult) die ($conn->error);
+			$numAttributes = $numAttributeResult->num_rows;
+			for($x=1;$x<=$numAttributes;$x++){
+				$prefQuery="INSERT INTO ProLungdx.userpreferences (UserName, AttributeNumber, IsVisible, IsExported) Values ('$newUsername', '$x', 'Yes', 'Yes')";
+				$prefResults = $conn->query($prefQuery);
+				if(!$prefResults) die ($conn->error);
+				
+			}
+			echo <<<_END
+			<div align="center">
+			The User: $newUsername has been successfully created with permissions: <br>
+			Is Admin = $isAdmin<br>
+			Can Edit = $canEdit<br>
+			Can Add Attribute = $canAddAttribute<br>
+			
+			</div>
+			
+_END;
+
+		} else {
+			//the passwords did not match. do not proceed
+			echo "The passwords do not match";
+		}
+	}
+}
 
 if(isset($_SESSION['username'])){
     echo "<script>
