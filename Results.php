@@ -10,8 +10,13 @@ if(isset($_SESSION['username'])) {
 
 if(isset($_POST['algName'])){
     $algName = $_POST['algName'];
-    //$allQuery = $_POST['allQuery'];
-    //$numAttributes = $_POST['numAttributes'];
+	if(isset($_POST['allQuery'])) {
+		$allQuery = $_POST['allQuery'];	
+	}
+	if(isset($_POST['numAttributes'])){
+		$numAttributes = $_POST['numAttributes'];	
+	}
+    
     
     if($algName == 'All Algorithms'){
         //User has indicated that they want to view all of the Algorithm Results
@@ -28,7 +33,7 @@ if(isset($_POST['algName'])){
             $algIDRow = $algIDResults->fetch_array(MYSQLI_NUM);
             $algID = $algIDRow[0];
             $algNames[$j] = $algIDRow[1];
-            $query = "SELECT Patient.SubjectID, Patient.Sex, Patient.MalignantBenign, Calculations.AlgScore, Calculations.Prediction, Calculations.Performance from ProLungdx.Patient Join ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID WHERE Calculations.AlgID = '$algID'";
+            $query = "SELECT Patient.SubjectID, Patient.Sex, Patient.MalignantBenign, Calculations.AlgScore, Calculations.Prediction, Calculations.Performance from ProLungdx.Patient Join ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID WHERE Calculations.AlgID = '$algID' AND Patient.SubmittedToAnalysis = '1'";
             $queryResult = $conn->query($query);
             if(!$queryResult) die ($conn->error);
             $queryRows = $queryResult->num_rows;
@@ -49,14 +54,15 @@ if(isset($_POST['algName'])){
         $algIDRow = $algIDResults->fetch_array(MYSQLI_NUM);
         $algID = $algIDRow[0];
         
-        $resultsQuery = "SELECT Patient.SubjectID, Patient.Sex, Patient.MalignantBenign, Calculations.AlgScore, Calculations.Prediction, Calculations.Performance from ProLungdx.Patient Join ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID WHERE Calculations.AlgID = '$algID'";
+        $resultsQuery = "SELECT Patient.SubjectID, Patient.Sex, Patient.MalignantBenign, Calculations.AlgScore, Calculations.Prediction, Calculations.Performance from ProLungdx.Patient Join ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID WHERE Calculations.AlgID = '$algID' AND Patient.SubmittedToAnalysis = '1'";
         $resultsResult = $conn->query($resultsQuery);
         if(!$resultsResult) die ($conn->error);
         $resultsRows = $resultsResult->num_rows;
 
 
-        $detailedExportQuery = "SELECT * FROM ProLungdx.Patient JOIN ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID JOIN ProLungdx.ScanData on Calculations.SubjectID = ScanData.SubjectID WHERE Calculations.AlgID = '$algID'";
-    }
+        $detailedExportQuery = "SELECT * FROM ProLungdx.Patient JOIN ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID JOIN ProLungdx.ScanData on Calculations.SubjectID = ScanData.SubjectID WHERE Calculations.AlgID = '$algID' AND Patient.SubmittedToAnalysis ='1'";
+		$patientExportQuery = "SELECT * FROM ProLungdx.Patient JOIN ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID WHERE Calculations.AlgID = '$algID' AND Patient.SubmittedToAnalysis = '1'";
+	}
     
 }
 
@@ -178,6 +184,11 @@ _END;
                             <input type="hidden" value="ResultsSearch.php" name="url">
                             <input type="submit" value="Export Detailed Results">
                         </form>
+						<form action="export.php" method="post">
+							<input type="hidden" value = "$patientExportQuery" name="patientResultsQuery">
+							<input type="hidden" value = "ResultsSearch.php" name="url">
+							<input type="submit" value = "Export Results">
+						</form>
                         <table border=".5">
                             <tr>
                                 <td>SubjectID</td>
@@ -194,7 +205,9 @@ $truePosCount = 0;
 $trueNegCount = 0;
 $falsePosCount = 0;
 $falseNegCount = 0;
+$patientCount = 0;
 for ($j=0; $j<$resultsRows; $j++) {
+	$patientCount = $patientCount + 1;
     $resultsResult->data_seek($j);
     $resultsRow=$resultsResult->fetch_array(MYSQLI_NUM);
     if ($resultsRow[5] == "True Positive"){
@@ -223,6 +236,9 @@ _END;
 
 $sensitivity = ($truePosCount/($truePosCount + $falseNegCount));
 $specificity = ($trueNegCount/($trueNegCount + $falsePosCount));
+$ppv = ($truePosCount / ($truePosCount + $falsePosCount));
+$npv = ($trueNegCount / ($trueNegCount + $falseNegCount));
+$acc = (($truePosCount + $trueNegCount)/ $patientCount);
 echo <<<_END
             
                         </table>
@@ -249,8 +265,12 @@ echo <<<_END
             </tr>
         </table>
         <br>
+		Patient Count = $patientCount <br>
         Sensitivity = $sensitivity <br>
         Specificity = $specificity <br>
+		Positive Predictive Value = $ppv <br>
+		Negative Predictive Value = $npv <br>
+		Accuracy = $acc <br>
         </div>
         
         </body>

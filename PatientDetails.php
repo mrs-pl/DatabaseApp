@@ -119,7 +119,7 @@ _END;
 
 $dataQuery = "SELECT * from ScanData where ScanData.SubjectID ='$subjectId'";
 $dataResult = $conn->query($dataQuery);
-if(!dataResult) die ($conn->error);
+if(!$dataResult) die ($conn->error);
 $dataRows = $dataResult->num_rows;
 
 for ($x=0; $x<$dataRows; $x++){

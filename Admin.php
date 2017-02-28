@@ -66,7 +66,10 @@ for($j=0;$j<$userRows;$j++){
     echo <<<_END
         <tr align="center">
         <form method="post" action="Admin.php">
-            <td>$userRow[1]</td>
+            <td>
+				$userRow[1]
+				<input type="hidden" name="userChangeName" value = "$userRow[1]">
+			</td>
 _END;
     
     //check to see if the User is Admin and display check boxes accordingly
@@ -109,17 +112,13 @@ _END;
     
     
 echo<<<_END
-            <td><input type="submit" value="Save Changes"></td>
+            <td>
+				<input type="submit" value="Save Changes" name="userChange">
+			</td>
             <td>
                 <form action="Admin.php" method="post">
                     <input type="hidden" name="user" value="$username">
                     <input type="submit" value="Reset Password">
-                </form>
-            </td>
-            <td>
-                <form action="Admin.php" method="post">
-                    <input type="hidden" name="user" value="$username">
-                    <input type
                 </form>
             </td>
         </form>
@@ -155,5 +154,14 @@ if(isset($_SESSION['username'])){
     
 }
 
+if(isset($_POST['userChange'])){
+	$userChangeName = $_POST['userChangeName'];
+	$isAdminChange = $_POST['IsAdmin'];
+	$canEditChange = $_POST['CanEdit'];
+	$canAddChange = $_POST['CanAddAttributes'];
+	$changeQuery = "UPDATE prolungdx.users SET IsAdmin = '$isAdminChange', CanEdit = '$canEditChange', CanAddAttribute ='$canAddChange' WHERE UserName = '$userChangeName'";
+	$changeResult = $conn->query($changeQuery);
+	if(!$changeResult) die ($conn->error);
+}
 
 ?>

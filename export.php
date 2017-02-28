@@ -35,7 +35,9 @@ if (isset($_POST['query'])) {
         $exportPrefResult->data_seek($j);
         $exportPrefRow = $exportPrefResult->fetch_array(MYSQLI_NUM);
         $exportAttributes[$j]=$exportPrefRow[0];
-        if ($j<$exportPrefRows-1){
+        if ($j==0) {
+			$finalQuery = $finalQuery."Patient.".$exportPrefRow[0].", ";
+		} elseif ($j<$exportPrefRows-1){
             $finalQuery = $finalQuery.$exportPrefRow[0].", ";
         } else {
             $finalQuery = $finalQuery.$exportPrefRow[0];
@@ -50,6 +52,41 @@ if (isset($_POST['query'])) {
     $finalQuery = $_POST['resultsQuery'];
     $url = $_POST['url'];
     
+} elseif (isset($_POST['patientResultsQuery'])){
+	$query = $_POST['patientResultsQuery'];
+    $url = $_POST['url'];
+
+    
+    //initiate the query that will have its results exported
+    $finalQuery = "SELECT ";
+    
+    //create the 'where' clause of the sql query
+    $exportQuery = substr($query, 8);
+    $exportPrefQuery = "SELECT PatientAttributeNames.AttributeName From UserPreferences Join PatientAttributeNames on UserPreferences.AttributeNumber = PatientAttributeNames.AttributeNumber where UserPreferences.UserName = '$username' and UserPreferences.IsExported = 'Yes'";
+    
+    //create and execute query to get attribute names of all attributes that should be exported based on user preferences
+    $exportPrefResult = $conn->query($exportPrefQuery);
+    if(!$exportPrefResult) die ($conn->error);
+    $exportPrefRows = $exportPrefResult->num_rows;
+    $exportAttributes = array();
+    
+    //loop through query results for exported attributes and construct the sql query that will only query those attributes
+    for ($j=0; $j<$exportPrefRows; $j++){
+        $exportPrefResult->data_seek($j);
+        $exportPrefRow = $exportPrefResult->fetch_array(MYSQLI_NUM);
+        $exportAttributes[$j]=$exportPrefRow[0];
+        if ($j==0) {
+			$finalQuery = $finalQuery."Patient.".$exportPrefRow[0].", ";
+		} else {
+            $finalQuery = $finalQuery.$exportPrefRow[0].", ";
+        } 
+		
+    }
+    $finalQuery = $finalQuery." calculations.AlgID, calculations.AlgScore, calculations.Prediction, calculations.Performance";
+	
+    //combine selected attributes with where clause
+    $finalQuery = $finalQuery.$exportQuery;
+	
 } elseif (isset($_POST['query2'])){
     //patient and scan data should be exported
     $url = $_POST['url'];
@@ -93,9 +130,12 @@ if (isset($_POST['query'])) {
     
     //combine attributes and where clause strings
     $finalQuery = $finalQuery.$exportQuery;
+	$finalQuery = $finalQuery." AND Patient.SubmittedToAnalysis = '1'";
 }
 
 //execute final query and export results to export.csv
+
+echo $finalQuery."<br>";
 $result = $conn->query($finalQuery);
 if(!$result) die ($conn->error);
 $rows = $result->num_rows;
