@@ -146,6 +146,41 @@ function runAlgorithm($algId, $subjectID) {
     } else {
         $epnPrediction = "Benign";
     }
+	if($compScore > 0.1) {
+		$cut1Pred = "Malignant";
+	} else {
+		$cut1Pred = "Benign";
+	}
+	if($compScore > 0.3) {
+		$cut2Pred = "Malignant";
+	} else {
+		$cut2Pred = "Benign";
+	} 
+	if($compScore > 0.5) {
+		$cut3Pred = "Malignant";
+	} else {
+		$cut3Pred = "Benign";
+	}
+	if($compScore > 0.7) {
+		$cut4Pred = "Malignant";
+	} else {
+		$cut4Pred = "Benign";
+	}
+	if($compScore > 0.9) {
+		$cut5Pred = "Malignant";
+	} else {
+		$cut5Pred = "Benign";
+	}
+	if($compScore > 0.4) {
+		$cut6Pred = "Malignant";
+	} else {
+		$cut6Pred = "Benign";
+	}
+	if($compScore > 0.2) {
+		$cut7Pred = "Malignant";
+	} else {
+		$cut7Pred = "Benign";
+	}
     //echo "EPN Prediction: $epnPrediction <br>";
 
     //Logical test to compare the algorithm prediction with the actual diagnosis and determine the performance
@@ -166,6 +201,125 @@ function runAlgorithm($algId, $subjectID) {
             $performance = "No Diagnosis";
         }
     }
+	if($cut2Pred == "Malignant"){
+        if($diagnosis == "Malignant"){
+            $cut1Perf = "True Positive";
+        } elseif($diagnosis == "Benign") {
+            $cut1Perf = "False Positive";
+        } else{
+            $cut1Perf = "No Diagnosis";
+        }
+    } else{
+        if($diagnosis == "Malignant"){
+            $cut1Perf = "False Negative";
+        } elseif($diagnosis == "Benign") {
+            $cut1Perf = "True Negative";
+        } else {
+            $cut1Perf = "No Diagnosis";
+        }
+    }
+	if($cut2Pred == "Malignant"){
+        if($diagnosis == "Malignant"){
+            $cut2Perf = "True Positive";
+        } elseif($diagnosis == "Benign") {
+            $cut2Perf = "False Positive";
+        } else{
+            $cut2Perf = "No Diagnosis";
+        }
+    } else{
+        if($diagnosis == "Malignant"){
+            $cut2Perf = "False Negative";
+        } elseif($diagnosis == "Benign") {
+            $cut2Perf = "True Negative";
+        } else {
+            $cut2Perf = "No Diagnosis";
+        }
+    }
+	if($cut3Pred == "Malignant"){
+        if($diagnosis == "Malignant"){
+            $cut3Perf = "True Positive";
+        } elseif($diagnosis == "Benign") {
+            $cut3Perf = "False Positive";
+        } else{
+            $cut3Perf = "No Diagnosis";
+        }
+    } else{
+        if($diagnosis == "Malignant"){
+            $cut3Perf = "False Negative";
+        } elseif($diagnosis == "Benign") {
+            $cut3Perf = "True Negative";
+        } else {
+            $cut3Perf = "No Diagnosis";
+        }
+    }
+	if($cut4Pred == "Malignant"){
+        if($diagnosis == "Malignant"){
+            $cut4Perf = "True Positive";
+        } elseif($diagnosis == "Benign") {
+            $cut4Perf = "False Positive";
+        } else{
+            $cut4Perf = "No Diagnosis";
+        }
+    } else{
+        if($diagnosis == "Malignant"){
+            $cut4Perf = "False Negative";
+        } elseif($diagnosis == "Benign") {
+            $cut4Perf = "True Negative";
+        } else {
+            $cut4Perf = "No Diagnosis";
+        }
+    }
+	if($cut5Pred == "Malignant"){
+        if($diagnosis == "Malignant"){
+            $cut5Perf = "True Positive";
+        } elseif($diagnosis == "Benign") {
+            $cut5Perf = "False Positive";
+        } else{
+            $cut5Perf = "No Diagnosis";
+        }
+    } else{
+        if($diagnosis == "Malignant"){
+            $cut5Perf = "False Negative";
+        } elseif($diagnosis == "Benign") {
+            $cut5Perf = "True Negative";
+        } else {
+            $cut5Perf = "No Diagnosis";
+        }
+    }
+	if($cut6Pred == "Malignant"){
+        if($diagnosis == "Malignant"){
+            $cut6Perf = "True Positive";
+        } elseif($diagnosis == "Benign") {
+            $cut6Perf = "False Positive";
+        } else{
+            $cut6Perf = "No Diagnosis";
+        }
+    } else{
+        if($diagnosis == "Malignant"){
+            $cut6Perf = "False Negative";
+        } elseif($diagnosis == "Benign") {
+            $cut6Perf = "True Negative";
+        } else {
+            $cut6Perf = "No Diagnosis";
+        }
+    }
+	if($cut7Pred == "Malignant"){
+        if($diagnosis == "Malignant"){
+            $cut7Perf = "True Positive";
+        } elseif($diagnosis == "Benign") {
+            $cut7Perf = "False Positive";
+        } else{
+            $cut7Perf = "No Diagnosis";
+        }
+    } else{
+        if($diagnosis == "Malignant"){
+            $cut7Perf = "False Negative";
+        } elseif($diagnosis == "Benign") {
+            $cut7Perf = "True Negative";
+        } else {
+            $cut7Perf = "No Diagnosis";
+        }
+    }
     //echo "Performance: $performance <br><br>";
     
     //search for database records of the stored prediction and performance for specific patient and specific algorithm
@@ -175,12 +329,15 @@ function runAlgorithm($algId, $subjectID) {
     $searchRows = $searchResults->num_rows;
     if($searchRows == 0){
         //no previous record exists for this patient and this algorithm. Create a new record
-        $insertCalcQuery = "INSERT INTO ProLungdx.Calculations (SubjectID, AlgID, AlgScore, Prediction, Performance) Values ('$subjectID', '$algId', '$compScore', '$epnPrediction', '$performance')";
+        $insertCalcQuery = "INSERT INTO ProLungdx.Calculations 
+		(SubjectID, AlgID, AlgScore, Prediction, Performance, Cut1Pred, Cut1Perf, Cut2Pred, Cut2Perf, Cut3Pred, Cut3Perf, Cut4Pred, Cut4Perf, Cut5Pred, Cut5Perf, Cut6Perf, Cut7Perf) 
+		Values ('$subjectID', '$algId', '$compScore', '$epnPrediction', '$performance', '$cut1Pred', '$cut1Perf', '$cut2Pred', '$cut2Perf', '$cut3Pred', '$cut3Perf', '$cut4Pred', '$cut4Perf', '$cut5Pred', '$cut5Perf', '$cut6Perf', '$cut7Perf')";
         $insertCalcResult = $conn->query($insertCalcQuery);
     } else{
         //a record for this patient has previously been created. Update the database to the current values in case any patient information has been changed since last calculation
         
-        $updateCalcQuery = "UPDATE ProLungdx.Calculations SET AlgScore = '$compScore', Prediction='$epnPrediction', Performance = '$performance' WHERE SubjectID = '$subjectID' AND AlgID = '$algId'";
+        $updateCalcQuery = "UPDATE ProLungdx.Calculations SET AlgScore = '$compScore', Prediction='$epnPrediction', Performance = '$performance', Cut1Pred = '$cut1Pred', Cut1Perf = '$cut1Perf', Cut2Pred = '$cut2Pred', 
+							Cut2Perf = '$cut2Perf', Cut3Pred = '$cut3Pred', Cut3Perf = '$cut3Perf', Cut4Pred = '$cut4Pred', Cut4Perf = '$cut4Perf', Cut5Pred = '$cut5Pred', Cut5Perf = '$cut5Perf', Cut6Perf = '$cut6Perf', Cut7Perf = '$cut7Perf' WHERE SubjectID = '$subjectID' AND AlgID = '$algId'";
         $updateCalcResults = $conn->query($updateCalcQuery);
         if(!$updateCalcResults) die ($conn->error);
     }
