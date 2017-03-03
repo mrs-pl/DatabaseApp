@@ -47,14 +47,15 @@ if(isset($_POST['algName'])){
         
     } else{
         //User has indicated they want to view a speficic set of results and performance
-        $algIDQuery = "SELECT AlgorithmID From ProLungdx.AlgorithmList WHERE AlgorithmList.AlgorithmName = '$algName'";
+        $algIDQuery = "SELECT AlgorithmID, CutPoint From ProLungdx.AlgorithmList WHERE AlgorithmList.AlgorithmName = '$algName'";
         $algIDResults = $conn->query($algIDQuery);
         if(!$algIDResults) die ($conn->error);
         $algIDResults->data_seek(0);
         $algIDRow = $algIDResults->fetch_array(MYSQLI_NUM);
         $algID = $algIDRow[0];
+		$cutPoint = $algIDRow[1];
         
-        $resultsQuery = "SELECT Patient.SubjectID, Patient.Sex, Patient.MalignantBenign, Calculations.AlgScore, Calculations.Prediction, Calculations.Performance from ProLungdx.Patient Join ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID WHERE Calculations.AlgID = '$algID' AND Patient.SubmittedToAnalysis = '1'";
+        $resultsQuery = "SELECT Patient.SubjectID, Patient.Sex, Patient.MalignantBenign, Calculations.AlgScore, Calculations.Prediction, Calculations.Performance, Calculations.Cut1Perf, Calculations.Cut2Perf, Calculations.Cut3Perf, Calculations.Cut4Perf, Calculations.Cut5Perf, Calculations.Cut6Perf, Calculations.Cut7Perf from ProLungdx.Patient Join ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID WHERE Calculations.AlgID = '$algID' AND Patient.SubmittedToAnalysis = '1'";
         $resultsResult = $conn->query($resultsQuery);
         if(!$resultsResult) die ($conn->error);
         $resultsRows = $resultsResult->num_rows;
@@ -206,6 +207,42 @@ $trueNegCount = 0;
 $falsePosCount = 0;
 $falseNegCount = 0;
 $patientCount = 0;
+$cut1TPCount = 0;
+$cut1TNCount =  0;
+$cut1FPCount = 0;
+$cut1FNCount = 0;
+
+$cut2TPCount = 0;
+$cut2TNCount =  0;
+$cut2FPCount = 0;
+$cut2FNCount = 0;
+
+$cut3TPCount = 0;
+$cut3TNCount =  0;
+$cut3FPCount = 0;
+$cut3FNCount = 0;
+
+$cut4TPCount = 0;
+$cut4TNCount =  0;
+$cut4FPCount = 0;
+$cut4FNCount = 0;
+
+$cut5TPCount = 0;
+$cut5TNCount =  0;
+$cut5FPCount = 0;
+$cut5FNCount = 0;
+
+$cut6TPCount = 0;
+$cut6TNCount = 0;
+$cut6FPCount = 0;
+$cut6FNCount = 0;
+
+$cut7TPCount = 0;
+$cut7TNCount = 0;
+$cut7FPCount = 0;
+$cut7FNCount = 0;
+
+
 for ($j=0; $j<$resultsRows; $j++) {
 	$patientCount = $patientCount + 1;
     $resultsResult->data_seek($j);
@@ -218,6 +255,69 @@ for ($j=0; $j<$resultsRows; $j++) {
         $falsePosCount = $falsePosCount + 1;
     } elseif ($resultsRow[5] == "False Negative") {
         $falseNegCount = $falseNegCount + 1;
+    }
+	if ($resultsRow[6] == "True Positive"){
+        $cut1TPCount = $cut1TPCount + 1;
+    } elseif ($resultsRow[6] == "True Negative") {
+        $cut1TNCount = $cut1TNCount + 1;
+    } elseif ($resultsRow[6] == "False Positive") {
+        $cut1FPCount = $cut1FPCount + 1;
+    } elseif ($resultsRow[6] == "False Negative") {
+        $cut1FNCount = $cut1FNCount + 1;
+    }
+	if ($resultsRow[7] == "True Positive"){
+        $cut2TPCount = $cut2TPCount + 1;
+    } elseif ($resultsRow[7] == "True Negative") {
+        $cut2TNCount = $cut2TNCount + 1;
+    } elseif ($resultsRow[7] == "False Positive") {
+        $cut2FPCount = $cut2FPCount + 1;
+    } elseif ($resultsRow[7] == "False Negative") {
+        $cut2FNCount = $cut2FNCount + 1;
+    }
+	if ($resultsRow[8] == "True Positive"){
+        $cut3TPCount = $cut3TPCount + 1;
+    } elseif ($resultsRow[8] == "True Negative") {
+        $cut3TNCount = $cut3TNCount + 1;
+    } elseif ($resultsRow[8] == "False Positive") {
+        $cut3FPCount = $cut3FPCount + 1;
+    } elseif ($resultsRow[8] == "False Negative") {
+        $cut3FNCount = $cut3FNCount + 1;
+    }
+	if ($resultsRow[9] == "True Positive"){
+        $cut4TPCount = $cut4TPCount + 1;
+    } elseif ($resultsRow[9] == "True Negative") {
+        $cut4TNCount = $cut4TNCount + 1;
+    } elseif ($resultsRow[9] == "False Positive") {
+        $cut4FPCount = $cut4FPCount + 1;
+    } elseif ($resultsRow[9] == "False Negative") {
+        $cut4FNCount = $cut4FNCount + 1;
+    }
+	if ($resultsRow[10] == "True Positive"){
+        $cut5TPCount = $cut5TPCount + 1;
+    } elseif ($resultsRow[10] == "True Negative") {
+        $cut5TNCount = $cut5TNCount + 1;
+    } elseif ($resultsRow[10] == "False Positive") {
+        $cut5FPCount = $cut5FPCount + 1;
+    } elseif ($resultsRow[10] == "False Negative") {
+        $cut5FNCount = $cut5FNCount + 1;
+    }
+	if ($resultsRow[11] == "True Positive"){
+        $cut6TPCount = $cut6TPCount + 1;
+    } elseif ($resultsRow[11] == "True Negative") {
+        $cut6TNCount = $cut6TNCount + 1;
+    } elseif ($resultsRow[11] == "False Positive") {
+        $cut6FPCount = $cut6FPCount + 1;
+    } elseif ($resultsRow[11] == "False Negative") {
+        $cut6FNCount = $cut6FNCount + 1;
+    }
+	if ($resultsRow[12] == "True Positive"){
+        $cut7TPCount = $cut7TPCount + 1;
+    } elseif ($resultsRow[12] == "True Negative") {
+        $cut7TNCount = $cut7TNCount + 1;
+    } elseif ($resultsRow[12] == "False Positive") {
+        $cut7FPCount = $cut7FPCount + 1;
+    } elseif ($resultsRow[12] == "False Negative") {
+        $cut7FNCount = $cut7FNCount + 1;
     }
     echo <<<_END
         <form action="PatientDetails.php" method="post">
@@ -234,11 +334,102 @@ for ($j=0; $j<$resultsRows; $j++) {
 _END;
 }
 
+$cut1Sens = ($cut1TPCount / ($cut1TPCount + $cut1FNCount));
+$cut1Spec = ($cut1TNCount / ($cut1TNCount + $cut1FPCount));
+$cut2Sens = ($cut2TPCount / ($cut2TPCount + $cut2FNCount));
+$cut2Spec = ($cut2TNCount / ($cut2TNCount + $cut2FPCount));
+$cut3Sens = ($cut3TPCount / ($cut3TPCount + $cut3FNCount));
+$cut3Spec = ($cut3TNCount / ($cut3TNCount + $cut3FPCount));
+$cut4Sens = ($cut4TPCount / ($cut4TPCount + $cut4FNCount));
+$cut4Spec = ($cut4TNCount / ($cut4TNCount + $cut4FPCount));
+$cut5Sens = ($cut5TPCount / ($cut5TPCount + $cut5FNCount));
+$cut5Spec = ($cut5TNCount / ($cut5TNCount + $cut5FPCount));
+$cut6Sens = ($cut6TPCount / ($cut6TPCount + $cut6FNCount));
+$cut6Spec = ($cut6TNCount / ($cut6TNCount + $cut6FPCount));
+$cut7Sens = ($cut7TPCount / ($cut7TPCount + $cut7FNCount));
+$cut7Spec = ($cut7TNCount / ($cut7TNCount + $cut7FPCount));
+
+
 $sensitivity = ($truePosCount/($truePosCount + $falseNegCount));
 $specificity = ($trueNegCount/($trueNegCount + $falsePosCount));
 $ppv = ($truePosCount / ($truePosCount + $falsePosCount));
 $npv = ($trueNegCount / ($trueNegCount + $falseNegCount));
 $acc = (($truePosCount + $trueNegCount)/ $patientCount);
+
+$minusSpec = 1-$specificity;
+$minusSpec1 = 1-$cut1Spec;
+$minusSpec2 = 1-$cut2Spec;
+$minusSpec3 = 1-$cut3Spec;
+$minusSpec4 = 1-$cut4Spec;
+$minusSpec5 = 1-$cut5Spec;
+$minusSpec6 = 1-$cut6Spec;
+$minusSpec7 = 1-$cut7Spec;
+
+$adjSens = $sensitivity * 300;
+$adjSens1 = $cut1Sens * 300;
+$adjSens2 = $cut2Sens * 300;
+$adjSens3 = $cut3Sens * 300;
+$adjSens4 = $cut4Sens * 300;
+$adjSens5 = $cut5Sens * 300;
+$adjSens6 = $cut6Sens * 300;
+$adjSens7 = $cut7Sens * 300;
+
+
+$specArray = array($specificity, $cut1Spec, $cut2Spec, $cut3Spec, $cut4Spec, $cut5Spec, $cut6Spec, $cut7Spec);
+$xValArray = array();
+$yValArray = array();
+$cutPointArray = array();
+rsort($specArray);
+
+for ($j=0; $j<8; $j++) {
+	$curSpec = $specArray[$j];
+	if ($curSpec == $specificity) {
+		$xValArray[$j] = $minusSpec * 300;
+		$yValArray[$j] = 300 - $adjSens;
+		$cutPointArray[$j] = $cutPoint;
+	} elseif ($curSpec == $cut1Spec) {
+		$xValArray[$j] = $minusSpec1 * 300;
+		$yValArray[$j] = 300 - $adjSens1;
+		$cutPointArray[$j] = .1;
+	} elseif ($curSpec == $cut2Spec) {
+		$xValArray[$j] = $minusSpec2 * 300;
+		$yValArray[$j] = 300 - $adjSens2;
+		$cutPointArray[$j] = .3;
+	} elseif ($curSpec == $cut3Spec) {
+		$xValArray[$j] = $minusSpec3 * 300;
+		$yValArray[$j] = 300 - $adjSens3;
+		$cutPointArray[$j] = .5;
+	} elseif ($curSpec == $cut4Spec) {
+		$xValArray[$j] = $minusSpec4 * 300;
+		$yValArray[$j] = 300 - $adjSens4;
+		$cutPointArray[$j] = .7;
+	} elseif ($curSpec == $cut5Spec) {
+		$xValArray[$j] = $minusSpec5 * 300;
+		$yValArray[$j] = 300 - $adjSens5;
+		$cutPointArray[$j] = .9;
+	} elseif ($curSpec == $cut6Spec) {
+		$xValArray[$j] = $minusSpec6 * 300;
+		$yValArray[$j] = 300 - $adjSens6;
+		$cutPointArray[$j] = .4;
+	} elseif ($curSpec == $cut7Spec) {
+		$xValArray[$j] = $minusSpec7 * 300;
+		$yValArray[$j] = 300 - $adjSens7;
+		$cutPointArray[$j] = .2;
+	}
+	
+	
+}
+
+$xVal1 = $xValArray[0];
+
+
+
+
+$area1 = ($xVal * (300-$yVal) * .5);
+$area2 = ((300 - $xVal) * $yVal * 0.5);
+$area3 = (300-$xVal)*(300-$yVal);
+$areaTotal = $area1 + $area2 + $area3;
+$rocEmp = $areaTotal/90000;
 echo <<<_END
             
                         </table>
@@ -271,6 +462,48 @@ echo <<<_END
 		Positive Predictive Value = $ppv <br>
 		Negative Predictive Value = $npv <br>
 		Accuracy = $acc <br>
+		<h4 align="center">ROC GRAPH</h4>
+        <div align="center">
+        <canvas id="roc" width="300" height="300" style="border:1px solid #000000;">
+        </canvas>
+        </div>
+        <script>
+            var canvas = document.getElementById("roc");
+            var ctx = canvas.getContext("2d");
+            ctx.moveTo(0,300);
+            ctx.lineTo($xValArray[0],$yValArray[0]);
+            ctx.stroke();
+			ctx.lineTo($xValArray[1],$yValArray[1]);
+			
+            ctx.stroke();
+			ctx.lineTo($xValArray[2],$yValArray[2]);
+            ctx.stroke();
+			ctx.lineTo($xValArray[3],$yValArray[3]);
+            ctx.stroke();
+			ctx.lineTo($xValArray[4],$yValArray[4]);
+            ctx.stroke();
+			ctx.lineTo($xValArray[5],$yValArray[5]);
+            ctx.stroke();
+            ctx.lineTo(300,0);
+            ctx.stroke();
+            ctx.setLineDash([5, 3]);
+            ctx.moveTo(0,300);
+            ctx.lineTo(300,0);
+            ctx.stroke();
+			ctx.fillText("x1 $cutPointArray[0]", $xValArray[0],$yValArray[0]);
+			ctx.fillText("x2 $cutPointArray[1]", $xValArray[1],$yValArray[1]);
+			ctx.fillText("x3 $cutPointArray[2]", $xValArray[2],$yValArray[2]);
+			ctx.fillText("x4 $cutPointArray[3]", $xValArray[3],$yValArray[3]);
+			ctx.fillText("x5 $cutPointArray[4]", $xValArray[4],$yValArray[4]);
+			ctx.fillText("x6 $cutPointArray[5]", $xValArray[5],$yValArray[5]);
+        </script>
+        <div align="center">
+        <br>ROC with Cutpoint: $cutPoint = $rocEmp<br><br>
+        Excel Plot Point for Graph:<br>
+        (0,0)<br>
+        ($minusSpec, $sensitivity)<br>
+        (1,1)<br>
+        </div>
         </div>
         
         </body>
