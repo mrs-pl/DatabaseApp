@@ -8,14 +8,69 @@ if(isset($_SESSION['username'])) {
     $username = '';
 }
 
+
+$whereClause = '';
 if(isset($_POST['algName'])){
     $algName = $_POST['algName'];
 	if(isset($_POST['allQuery'])) {
 		$allQuery = $_POST['allQuery'];	
+	} else {
+		$allQuery = '';
 	}
 	if(isset($_POST['numAttributes'])){
 		$numAttributes = $_POST['numAttributes'];	
 	}
+	if(isset($_POST['attribute1']) && isset($_POST['operator1']) && isset($_POST['input1'])) {
+		$attribute1 = $_POST['attribute1'];
+		$operator1 = $_POST['operator1'];
+		$input1 = $_POST['input1'];
+		if($operator1 == "like"){
+			$whereClause = $whereClause." AND Patient.$attribute1 LIKE '%$input1%'";
+		} else {
+			$whereClause = $whereClause." AND Patient.$attribute1 $operator1 '$input1'";
+		}
+	}
+	if(isset($_POST['attribute2']) && isset($_POST['operator2']) && isset($_POST['input2'])) {
+		$attribute2 = $_POST['attribute2'];
+		$operator2 = $_POST['operator2'];
+		$input2 = $_POST['input2'];
+		if($operator2 == "like"){
+			$whereClause = $whereClause." AND Patient.$attribute2 LIKE '%$input2%'";
+		} else {
+			$whereClause = $whereClause." AND Patient.$attribute2 $operator2 '$input2'";
+		}
+	}
+	if(isset($_POST['attribute3']) && isset($_POST['operator3']) && isset($_POST['input3'])) {
+		$attribute3 = $_POST['attribute3'];
+		$operator3 = $_POST['operator3'];
+		$input3 = $_POST['input3'];
+		if($operator3 == "like"){
+			$whereClause = $whereClause." AND Patient.$attribute3 LIKE '%$input3%'";
+		} else {
+			$whereClause = $whereClause." AND Patient.$attribute3 $operator3 '$input3'";
+		}
+	}
+	if(isset($_POST['attribute4']) && isset($_POST['operator4']) && isset($_POST['input4'])) {
+		$attribute4 = $_POST['attribute4'];
+		$operator4 = $_POST['operator4'];
+		$input4 = $_POST['input4'];
+		if($operator4 == "like"){
+			$whereClause = $whereClause." AND Patient.$attribute4 LIKE '%$input4%'";
+		} else {
+			$whereClause = $whereClause." AND Patient.$attribute4 $operator4 '$input4'";
+		}
+	}
+	if(isset($_POST['attribute5']) && isset($_POST['operator5']) && isset($_POST['input5'])) {
+		$attribute5 = $_POST['attribute5'];
+		$operator5 = $_POST['operator5'];
+		$input5 = $_POST['input5'];
+		if($operator5 == "like"){
+			$whereClause = $whereClause." AND Patient.$attribute5 LIKE '%$input5%'";
+		} else {
+			$whereClause = $whereClause." AND Patient.$attribute5 $operator5 '$input5'";
+		}
+	}
+	
     
     
     if($algName == 'All Algorithms'){
@@ -34,6 +89,9 @@ if(isset($_POST['algName'])){
             $algID = $algIDRow[0];
             $algNames[$j] = $algIDRow[1];
             $query = "SELECT Patient.SubjectID, Patient.Sex, Patient.MalignantBenign, Calculations.AlgScore, Calculations.Prediction, Calculations.Performance from ProLungdx.Patient Join ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID WHERE Calculations.AlgID = '$algID' AND Patient.SubmittedToAnalysis = '1'";
+			if($whereClause != '') {
+				$query = $query.$whereClause;
+			}
             $queryResult = $conn->query($query);
             if(!$queryResult) die ($conn->error);
             $queryRows = $queryResult->num_rows;
@@ -56,6 +114,9 @@ if(isset($_POST['algName'])){
 		$cutPoint = $algIDRow[1];
         
         $resultsQuery = "SELECT Patient.SubjectID, Patient.Sex, Patient.MalignantBenign, Calculations.AlgScore, Calculations.Prediction, Calculations.Performance, Calculations.Cut1Perf, Calculations.Cut2Perf, Calculations.Cut3Perf, Calculations.Cut4Perf, Calculations.Cut5Perf, Calculations.Cut6Perf, Calculations.Cut7Perf from ProLungdx.Patient Join ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID WHERE Calculations.AlgID = '$algID' AND Patient.SubmittedToAnalysis = '1'";
+		if($whereClause != '') {
+				$resultsQuery = $resultsQuery.$whereClause;
+		}
         $resultsResult = $conn->query($resultsQuery);
         if(!$resultsResult) die ($conn->error);
         $resultsRows = $resultsResult->num_rows;
@@ -63,8 +124,20 @@ if(isset($_POST['algName'])){
 
         $detailedExportQuery = "SELECT * FROM ProLungdx.Patient JOIN ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID JOIN ProLungdx.ScanData on Calculations.SubjectID = ScanData.SubjectID WHERE Calculations.AlgID = '$algID' AND Patient.SubmittedToAnalysis ='1'";
 		$patientExportQuery = "SELECT * FROM ProLungdx.Patient JOIN ProLungdx.Calculations on Patient.SubjectID = Calculations.SubjectID WHERE Calculations.AlgID = '$algID' AND Patient.SubmittedToAnalysis = '1'";
+		if($allQuery != '' && $allQuery != "All Patients") {
+			$whereClause = $whereClause." AND Patient.DataSet = '$allQuery'";
+		}
+		if($whereClause != '') {
+				$detailedExportQuery = $detailedExportQuery.$whereClause;
+				$patientExportQuery = $patientExportQuery.$whereClause;
+		} 
 	}
     
+	
+	
+} else {
+	 echo "<script> window.location.assign('ResultsSearch.php'); </script>";
+	
 }
 
 
@@ -420,16 +493,70 @@ for ($j=0; $j<8; $j++) {
 	
 }
 
-$xVal1 = $xValArray[0];
-
-
-
-
+$xVal = $minusSpec * 300;
+$yVal = 300 - $adjSens;
 $area1 = ($xVal * (300-$yVal) * .5);
 $area2 = ((300 - $xVal) * $yVal * 0.5);
 $area3 = (300-$xVal)*(300-$yVal);
 $areaTotal = $area1 + $area2 + $area3;
 $rocEmp = $areaTotal/90000;
+
+$xVal = $minusSpec1 * 300;
+$yVal = 300 - $adjSens1;
+$area1 = ($xVal * (300-$yVal) * .5);
+$area2 = ((300 - $xVal) * $yVal * 0.5);
+$area3 = (300-$xVal)*(300-$yVal);
+$areaTotal = $area1 + $area2 + $area3;
+$rocEmp1 = $areaTotal/90000;
+
+$xVal = $minusSpec2 * 300;
+$yVal = 300 - $adjSens2;
+$area1 = ($xVal * (300-$yVal) * .5);
+$area2 = ((300 - $xVal) * $yVal * 0.5);
+$area3 = (300-$xVal)*(300-$yVal);
+$areaTotal = $area1 + $area2 + $area3;
+$rocEmp2 = $areaTotal/90000;
+
+$xVal = $minusSpec3 * 300;
+$yVal = 300 - $adjSens3;
+$area1 = ($xVal * (300-$yVal) * .5);
+$area2 = ((300 - $xVal) * $yVal * 0.5);
+$area3 = (300-$xVal)*(300-$yVal);
+$areaTotal = $area1 + $area2 + $area3;
+$rocEmp3 = $areaTotal/90000;
+
+$xVal = $minusSpec4 * 300;
+$yVal = 300 - $adjSens4;
+$area1 = ($xVal * (300-$yVal) * .5);
+$area2 = ((300 - $xVal) * $yVal * 0.5);
+$area3 = (300-$xVal)*(300-$yVal);
+$areaTotal = $area1 + $area2 + $area3;
+$rocEmp4 = $areaTotal/90000;
+
+$xVal = $minusSpec5 * 300;
+$yVal = 300 - $adjSens5;
+$area1 = ($xVal * (300-$yVal) * .5);
+$area2 = ((300 - $xVal) * $yVal * 0.5);
+$area3 = (300-$xVal)*(300-$yVal);
+$areaTotal = $area1 + $area2 + $area3;
+$rocEmp5 = $areaTotal/90000;
+
+$xVal = $minusSpec6 * 300;
+$yVal = 300 - $adjSens6;
+$area1 = ($xVal * (300-$yVal) * .5);
+$area2 = ((300 - $xVal) * $yVal * 0.5);
+$area3 = (300-$xVal)*(300-$yVal);
+$areaTotal = $area1 + $area2 + $area3;
+$rocEmp6 = $areaTotal/90000;
+
+$xVal = $minusSpec7 * 300;
+$yVal = 300 - $adjSens7;
+$area1 = ($xVal * (300-$yVal) * .5);
+$area2 = ((300 - $xVal) * $yVal * 0.5);
+$area3 = (300-$xVal)*(300-$yVal);
+$areaTotal = $area1 + $area2 + $area3;
+$rocEmp7 = $areaTotal/90000;
+
 echo <<<_END
             
                         </table>
@@ -484,6 +611,10 @@ echo <<<_END
             ctx.stroke();
 			ctx.lineTo($xValArray[5],$yValArray[5]);
             ctx.stroke();
+			ctx.lineTo($xValArray[6],$yValArray[6]);
+            ctx.stroke();
+			ctx.lineTo($xValArray[7],$yValArray[7]);
+            ctx.stroke();
             ctx.lineTo(300,0);
             ctx.stroke();
             ctx.setLineDash([5, 3]);
@@ -496,6 +627,8 @@ echo <<<_END
 			ctx.fillText("x4 $cutPointArray[3]", $xValArray[3],$yValArray[3]);
 			ctx.fillText("x5 $cutPointArray[4]", $xValArray[4],$yValArray[4]);
 			ctx.fillText("x6 $cutPointArray[5]", $xValArray[5],$yValArray[5]);
+			ctx.fillText("x7 $cutPointArray[6]", $xValArray[6],$yValArray[6]);
+			ctx.fillText("x8 $cutPointArray[7]", $xValArray[7],$yValArray[7]);
         </script>
         <div align="center">
         <br>ROC with Cutpoint: $cutPoint = $rocEmp<br><br>
@@ -504,6 +637,60 @@ echo <<<_END
         ($minusSpec, $sensitivity)<br>
         (1,1)<br>
         </div>
+		<br><br>
+		<div align="center">
+		<strong align="center">Sensitivity and Specificity Table</strong>
+		</div>
+		<table align="center" border=".5">
+			<tr>
+				<td>Cut Point</td>
+				<td>Sensitivity</td>
+				<td>Specificity</td>
+				<td>ROC</td>
+			</tr>
+			<tr>
+				<td>0.1</td>
+				<td>$cut1Sens</td>
+				<td>$cut1Spec</td>
+				<td>$rocEmp1</td>
+			</tr>
+			<tr>
+				<td>0.2</td>
+				<td>$cut7Sens</td>
+				<td>$cut7Spec</td>
+				<td>$rocEmp7</td>
+			</tr>
+			<tr>
+				<td>0.3</td>
+				<td>$cut2Sens</td>
+				<td>$cut2Spec</td>
+				<td>$rocEmp2</td>
+			</tr>
+			<tr>
+				<td>0.4</td>
+				<td>$cut6Sens</td>
+				<td>$cut6Spec</td>
+				<td>$rocEmp6</td>
+			</tr>
+			<tr>
+				<td>0.5</td>
+				<td>$cut3Sens</td>
+				<td>$cut3Spec</td>
+				<td>$rocEmp3</td>
+			</tr>
+			<tr>
+				<td>0.7</td>
+				<td>$cut4Sens</td>
+				<td>$cut4Spec</td>
+				<td>$rocEmp4</td>
+			</tr>
+			<tr>
+				<td>0.9</td>
+				<td>$cut5Sens</td>
+				<td>$cut5Spec</td>
+				<td>$rocEmp5</td>
+			</tr>
+		</table>
         </div>
         
         </body>

@@ -1,7 +1,6 @@
 <?php
 require_once 'dbInfo.php';
 require_once 'checkSession.php';
-session_start();
 $conn = new mysqli($hn, $un, $pw, $db);
 if(isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
