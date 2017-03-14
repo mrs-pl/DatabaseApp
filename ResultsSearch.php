@@ -70,39 +70,91 @@ for($j=0; $j<$algListRows; $j++){
 _END;
 }
 
+$dataSetQuery = "SELECT DISTINCT DataSet from ProLungdx.Patient";
+$dataSetResult = $conn->query($dataSetQuery);
+if(!$dataSetResult) die ($conn->error);
+$dataSetRows = $dataSetResult->num_rows;
 
 echo<<<_END
                                 </select>
                             </td>
                         </tr>
                         <tr>
-                            <td>All Patients or Query Patients</td>
+                            <td>Patient Population</td>
                             <td>
                                 <select name="allQuery">
                                     <option selected disabled>Select Patient Population</option>
                                     <option>All Patients</option>
-                                    <option>Query Patients</option>
+_END;
+
+for($j=0; $j<$dataSetRows; $j++) {
+	$dataSetResult->data_seek($j);
+	$dataSetRow = $dataSetResult->fetch_array(MYSQLI_NUM);
+	
+	echo<<<_END
+									<option value="$dataSetRow[0]">$dataSetRow[0]</option>
+_END;
+	
+}
+
+
+echo<<<_END
+                                    
                                 </select>
                             </td>
                         </tr>
                         <tr>
-                            <td>Number of Attributes to Query</td>
+                            <td>Attributes to Query</td>
                             <td>
-                                <select name="numAttributes">
-                                    <option selected disabled>Select # of Query Attributes</option>
                                 
+	
+	
+
+
+                               
+								<br>
 _END;
 
-    for($j=1; $j<21; $j++){
+for($x=1; $x<6; $x++){
+    echo<<<_END
+                    <select name="attribute$x">
+                        <option selected disabled>Choose Attribute</option>
+_END;
+
+
+    //create and execute sql query to return all attribute names
+    $query = "SELECT * from PatientAttributeNames order by AttributeName ASC";
+    $result = $conn->query($query);
+    if(!$result) die ($conn->error);
+    $rows = $result->num_rows;
+
+    //loop through query results and create an option in the drop down menu for each attribute
+    for($j=0; $j<$rows; $j++){
+        $result->data_seek($j);
+        $row = $result->fetch_array(MYSQLI_NUM);
+    
         echo<<<_END
-                                <option>$j</option>
-        
-        
+        <option value ="$row[1]">$row[1]</option>
 _END;
-    }
+	}
 
+    //create and display the rest of the query builder
 echo<<<_END
-                                </select>
+                    </select>
+                    that is 
+                    <select name="operator$x">
+                        <option selected disabled>Choose Operator</option>
+                        <option value = "=">Equal to</option>
+                        <option value = ">">Greather Than</option>
+                        <option value = "<">Less than</option>
+                        <option value = "like">Like</option>
+                    </select>
+                    <input type="text" name="input$x">
+                    <br>
+_END;
+}
+
+echo <<<_END
                             </td>
                         </tr>
  

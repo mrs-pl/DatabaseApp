@@ -151,6 +151,11 @@ function runAlgorithm($algId, $subjectID) {
 	} else {
 		$cut1Pred = "Benign";
 	}
+	if($compScore > 0.2) {
+		$cut7Pred = "Malignant";
+	} else {
+		$cut7Pred = "Benign";
+	}
 	if($compScore > 0.3) {
 		$cut2Pred = "Malignant";
 	} else {
@@ -176,11 +181,7 @@ function runAlgorithm($algId, $subjectID) {
 	} else {
 		$cut6Pred = "Benign";
 	}
-	if($compScore > 0.2) {
-		$cut7Pred = "Malignant";
-	} else {
-		$cut7Pred = "Benign";
-	}
+	
     //echo "EPN Prediction: $epnPrediction <br>";
 
     //Logical test to compare the algorithm prediction with the actual diagnosis and determine the performance
@@ -201,7 +202,7 @@ function runAlgorithm($algId, $subjectID) {
             $performance = "No Diagnosis";
         }
     }
-	if($cut2Pred == "Malignant"){
+	if($cut1Pred == "Malignant"){
         if($diagnosis == "Malignant"){
             $cut1Perf = "True Positive";
         } elseif($diagnosis == "Benign") {
