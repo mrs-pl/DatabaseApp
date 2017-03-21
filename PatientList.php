@@ -19,32 +19,47 @@ $rows = $result->num_rows;
 
 //create html page structure, header, forms for exporting patient list and patient list with scan data
 echo <<<_END
-    <html>
-     <link rel="stylesheet" type="text/css" href="style.css">
+    <html class="gr__10_1_10_85">
+     <link rel="stylesheet" type="text/css" href="ProLungDatabaseStyles.css">
         <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="ProLungDatabaseStyles.css">
             <title>
                 ProLungdx Clinical Database
             </title>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-            <h1 align="center">
-                <a href="home.php"><img src="ProLungdx.png"></a>
-            </h1><br>
-            <div id="header">
-                <div id="nav" align="left" width="50%">
-                    <a href="PatientList.php">Patients</a> <a href="AttributeList.php">Attributes</a>  <a href="AlgorithmList.php">Algorithms</a>  <a href="ResultsSearch.php"> Results </a>   
+            <!-- JavaScript to load jquery -->
+            <script src="./Home_files/jquery.min.js.download"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+            <!-- JavaScript to load fonts from Typekit -->
+            <script src="https://use.typekit.net/gyp1njd.js"></script>
+            <script>try{Typekit.load({ async: true });}catch(e){}</script>
+        </head>
+		<body data-gr-c-s-loaded="true">
+			
+            <div id="header" width="100%">
+                <div id="nav" style="float:left; margin: 25px;" width="50%">
+                    <a class="button" href="PatientList.php">Patients</a>
+					<a class="button" href="AttributeList.php">Attributes</a>  
+					<a class="button" href="AlgorithmList.php">Algorithms</a>  
+					<a class="button" href="ResultsSearch.php"> Results </a>   
                 </div>
-                <div id="loginNeeded" align="right" width="50%">
-                    <a href="login.php">Login</a></pre>
+				
+				<div id="logo" align="center" style="display: inline-block; width: 460px; height: 70px; margin-top: 10px; margin-left: 12%;">
+                <a href="home.php"><img src="Images/ProLungDatabaseLogo.png" height="70" width="460"></a>
+				</div>
+			
+                <div id="loginNeeded" align="right" style="float:right; margin: 25px;" width="50%">
+                    <a class="button" href="login.php">Login</a>
                 </div>
-                <div id="loggedIn" align="right" width="50%">
-                    <a href="user_profile.php">$username</a>
-                    <a href="logout.php">Log out</a>
+                <div id="loggedIn" align="right" width="50%" style="display: none; float: right; margin: 25px;">
+                    <a class="button" id="admin" href="Admin.php">Admin</a>
+                    <a class="button" href="user_profile.php">$username</a>
+                    <a class="button" href="logout.php">Log out</a>
                 </div>
             </div>
-            
-        </head>
-        <body>
-        <br><br>
+            </div>
+        
+        
+        <br><br><br><br><br>
         <div id="contentBox" style="margin:0px auto; width:100%">
             <div id="column1" style="float:left; margin:0; width:0%;">
                 

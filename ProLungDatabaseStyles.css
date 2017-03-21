@@ -1,0 +1,113 @@
+/* CSS for ProLung Database */
+/* Written by Vincent Fu, March 2017 */
+
+/* Main body */
+body {
+  background-color:#FFF;
+}
+
+/* Sticky Header */
+#header {
+    height:100px;
+    background:#F2F2F2;
+    box-shadow: 0px 2px 5px #CCC;
+    position:fixed;
+    top:0px;
+    width:100%;
+    z-index: 9999;
+}
+
+/* contentBox adjusted for header */
+#contentBox {
+    width:auto;
+    background: #F2F2F2;
+    height: auto;
+    margin: 100px auto;
+}
+
+/* COME BACK TO THIS LATER TO CENTER LOGO */
+/* Logo container classes*/
+.logo-main-container {
+    float: left;
+    position: relative;
+    left: 50%;
+}
+.logo-fixer-container {
+    float: left;
+    position: relative;
+    left: -50%;
+}
+/* floated class */
+.floated {
+  float: left;
+  margin-right: 10px;
+}
+
+/* Heading 1 */
+h1 {
+  color:rgb(0, 148, 68);
+  margin-top:0.67em;
+  margin-bottom:0.67em;
+  margin-left:0;
+  margin-right:0;
+  font-family:'calluna', Cambria, 'Hoefler Text', 'Liberation Serif', Times, 'Times New Roman', 'serif';
+  font-style:normal;
+  font-weight:400;
+}
+
+/* Heading 2 */
+h2 {
+  color:rgb(0, 100, 0);
+  font-family:'calluna', Cambria, 'Hoefler Text', 'Liberation Serif', Times, 'Times New Roman', 'serif';
+  font-style:normal;
+  font-weight:300;
+}
+
+/* Heading 3 */
+h3 {
+  color:rgb(0, 75, 0);
+  font-family:'calluna-sans', Segoe, 'Segoe UI', 'DejaVu Sans', 'Trebuchet MS', Verdana, 'sans-serif';
+  font-style:normal;
+  font-weight:500;
+}
+
+/* Paragraph */
+p {
+  color:rgb(50,50,50);
+  font-family:'calluna-sans', Segoe, 'Segoe UI', 'DejaVu Sans', 'Trebuchet MS', Verdana, 'sans-serif';
+  font-style:normal;
+  font-weight:400;
+}
+
+
+/* [class=Button] hyperlinks */
+a[class*="button"]:link, a[class*="button"]:visited {
+    background-color: rgb(0, 100, 0);
+    color:white;
+    font-family:'calluna-sans', Segoe, 'Segoe UI', 'DejaVu Sans', 'Trebuchet MS', Verdana, 'sans-serif';
+    font-style:normal;
+    font-weight:400;
+    padding:14px 25px;
+    text-align:center;
+    text-decoration:none;
+    display:inline-block;
+}
+
+/* Mouse over [class=Button] hyperlink */
+a[class*="button"]:hover, a[class*="button"]:active {
+    background-color:rgb(0, 148, 68);
+}
+
+/* all classless hyperlinks */
+a:link, a:visited {
+    color:rgb(0, 100, 0);
+    font-family:'calluna-sans', Segoe, 'Segoe UI', 'DejaVu Sans', 'Trebuchet MS', Verdana, 'sans-serif';
+    font-style:normal;
+    font-weight:600;
+    text-decoration:none;
+}
+
+/* Mouse over classless hyperlink */
+a:hover {
+    color:rgb(0, 148, 68);
+}
